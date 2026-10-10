@@ -117,10 +117,12 @@ straight through and only falls back to bundled SQLite for the local case.
    | Name                | Value                                            |
    | ------------------- | ------------------------------------------------ |
    | `DATABASE_URL`      | `postgresql://...` (your pooled connection string) |
-   | `DATABASE_PROVIDER` | `postgresql`                                     |
    | `AUTH_SECRET`       | a long random string                             |
    | `AI_MODE`           | `mock` (no paid keys needed)                     |
    | `SEED_SECRET`       | a secret you choose (enables one-time seeding)   |
+   | `DATABASE_PROVIDER` | (optional) `postgresql` — auto-detected on Vercel |
+
+   > **Note:** The build auto-detects Vercel (`VERCEL=1`) and uses `postgresql` there. You can safely omit `DATABASE_PROVIDER`; only set it if you want to override. Locally it stays `sqlite` (zero-setup).
 
 3. **Redeploy** (Deployments → ⋯ → Redeploy, or push a commit). The build runs
    `prepare-schema` → `prisma generate` (postgres client) → `next build`.
