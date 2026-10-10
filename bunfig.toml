@@ -1,0 +1,10 @@
+# Bun config — see scripts/install-with-bun.ps1 for why this project uses Bun.
+[install]
+# registry.npmjs.org routing is unreliable on this network (the local
+# firewall/antivirus corrupts and drops large encrypted transfers from that
+# CDN). AoT's npmmirror CDN serves the identical packages without corruption.
+registry = "https://registry.npmmirror.com"
+
+# Packages whose install scripts we must run (per-install-store default is to
+# skip third-party lifecycle scripts). Prisma engines are postinstall'd.
+trustedDependencies = ["@prisma/engines", "@prisma/client", "esbuild"]

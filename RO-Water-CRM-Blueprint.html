@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RO Water Service Provider — Website + AI CRM Blueprint</title>
+<style>
+  :root{
+    --brand:#0b6bcb;
+    --brand-dark:#083e78;
+    --brand-light:#e8f2fc;
+    --accent:#00a99d;
+    --ink:#1b2230;
+    --muted:#5b6b82;
+    --line:#d8e0ea;
+    --bg:#f5f8fc;
+  }
+  *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:11.2pt;line-height:1.55;}
+  .page{background:#fff;max-width:900px;margin:0 auto;padding:42px 56px;}
+  @page{size:A4;margin:16mm 14mm;}
+  @media print{
+    html,body{background:#fff;}
+    .page{max-width:none;margin:0;padding:0;}
+    .no-print{display:none!important;}
+    .cover{page-break-after:always;margin:0 0 30px;min-height:auto;border-radius:10px;padding:48px 44px;}
+    h1,h2,h3{break-after:avoid;}
+    table,pre,.card,.callout{break-inside:avoid;}
+    .section{break-inside:auto;}
+  }
+  /* Cover */
+  .cover{background:linear-gradient(140deg,#083e78 0%,#0b6bcb 55%,#00a99d 120%);color:#fff;border-radius:0;padding:70px 56px;min-height:820px;display:flex;flex-direction:column;justify-content:space-between;margin:-42px -56px 40px;}
+  .cover .tag{display:inline-block;border:1px solid rgba(255,255,255,.55);border-radius:40px;padding:6px 16px;font-size:10.5pt;letter-spacing:1px;text-transform:uppercase;}
+  .cover h1{font-size:34pt;line-height:1.12;margin:26px 0 10px;font-weight:800;}
+  .cover h2{font-size:14pt;font-weight:400;opacity:.95;margin:0;max-width:640px;}
+  .cover .meta{border-top:1px solid rgba(255,255,255,.35);padding-top:18px;font-size:10.5pt;display:flex;flex-wrap:wrap;gap:22px;}
+  .cover .meta b{display:block;font-size:9pt;text-transform:uppercase;letter-spacing:1px;opacity:.8;font-weight:600;}
+  .drop{width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:6px;}
+  h2.section-title{font-size:17pt;color:var(--brand-dark);border-bottom:3px solid var(--brand);padding-bottom:8px;margin:38px 0 16px;}
+  h3{font-size:12.8pt;color:var(--brand-dark);margin:22px 0 8px;}
+  h4{font-size:11.4pt;color:var(--ink);margin:16px 0 6px;}
+  p{margin:8px 0;}
+  ul,ol{margin:8px 0 8px 4px;padding-left:20px;}
+  li{margin:3px 0;}
+  .lead{font-size:11.8pt;color:var(--muted);}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:10.2pt;}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;}
+  th{background:var(--brand-light);color:var(--brand-dark);font-weight:700;}
+  tr:nth-child(even) td{background:#fafcfe;}
+  .card{border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:8px;padding:12px 16px;margin:12px 0;background:#fbfdff;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .stat{background:var(--brand-light);border-radius:8px;padding:12px;text-align:center;}
+  .stat b{display:block;font-size:18pt;color:var(--brand);}
+  .callout{background:#fff8e6;border:1px solid #f0d78a;border-radius:8px;padding:12px 16px;margin:12px 0;}
+  .callout.tip{background:#eafaf3;border-color:#9fdcc2;}
+  .callout.warn{background:#fdecec;border-color:#f0b4b4;}
+  .callout b{color:var(--brand-dark);}
+  code,.mono{font-family:"Cascadia Code",Consolas,monospace;background:#eef3f9;border-radius:4px;padding:1px 5px;font-size:9.6pt;}
+  pre{background:#0e1c2b;color:#dbe8f5;border-radius:8px;padding:14px 16px;overflow:auto;font-size:9.2pt;line-height:1.5;}
+  pre .c{color:#7f9bb5;}
+  .toc{background:var(--brand-light);border-radius:10px;padding:16px 22px;margin:10px 0 6px;}
+  .toc ol{columns:2;column-gap:34px;margin:0;padding-left:20px;}
+  .toc a{color:var(--brand-dark);text-decoration:none;}
+  .pill{display:inline-block;background:var(--brand);color:#fff;border-radius:20px;padding:3px 12px;font-size:9.4pt;font-weight:600;margin:2px 4px 2px 0;}
+  .pill.g{background:var(--accent);}
+  .pill.d{background:var(--brand-dark);}
+  .flow{background:#f3f7fc;border:1px dashed var(--brand);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:10.4pt;}
+  .flow .step{display:flex;gap:10px;align-items:flex-start;margin:6px 0;}
+  .flow .num{flex:none;width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;font-size:9.4pt;display:flex;align-items:center;justify-content:center;font-weight:700;}
+  .footer{margin-top:34px;border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:9.4pt;text-align:center;}
+  .kpi{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0;}
+  .kpi div{flex:1;min-width:150px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;}
+  .kpi div b{color:var(--brand);}
+  .small{font-size:9.6pt;color:var(--muted);}
+  hr{border:none;border-top:1px solid var(--line);margin:26px 0;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============ COVER ============ -->
+  <section class="cover">
+    <div>
+      <div class="drop">💧</div>
+      <span class="tag">Project Blueprint &amp; Solution Architecture</span>
+      <h1>RO Water Service Provider<br>Website&nbsp;+&nbsp;AI-Powered CRM</h1>
+      <h2>Unified cold-calling &amp; online-lead management with an autonomous AI telecalling engine, smart lead filtering, and seamless human hand-off.</h2>
+    </div>
+    <div>
+      <div class="kpi" style="color:#fff">
+        <div style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)"><b style="color:#fff">Next.js</b><br><span style="color:#dbe8f5">Web + App</span></div>
+        <div style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)"><b style="color:#fff">PostgreSQL</b><br><span style="color:#dbe8f5">+ Prisma ORM</span></div>
+        <div style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)"><b style="color:#fff">Twilio + GPT-4o</b><br><span style="color:#dbe8f5">Realtime Voice AI</span></div>
+        <div style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)"><b style="color:#fff">50+ agents</b><br><span style="color:#dbe8f5">5,000+ calls / day</span></div>
+      </div>
+      <div class="meta">
+        <div><b>Document</b>Solution Blueprint v1.0</div>
+        <div><b>Prepared For</b>RO Water Service Provider</div>
+        <div><b>Date</b>October 2026</div>
+        <div><b>Status</b>Awaiting Client Approval</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TOC ============ -->
+  <h2 class="section-title">Contents</h2>
+  <div class="toc">
+    <ol>
+      <li><a href="#s1">Executive Summary</a></li>
+      <li><a href="#s2">Business Objectives &amp; Success Metrics</a></li>
+      <li><a href="#s3">High-Level Solution Architecture</a></li>
+      <li><a href="#s4">Technology Stack</a></li>
+      <li><a href="#s5">Module 1 — Public Website</a></li>
+      <li><a href="#s6">Module 2 — Customer Portal</a></li>
+      <li><a href="#s7">Module 3 — CRM &amp; Unified Lead Inbox</a></li>
+      <li><a href="#s8">Module 4 — AI Telecalling Engine</a></li>
+      <li><a href="#s9">AI Voice Agent — Call Flow &amp; Scripts</a></li>
+      <li><a href="#s10">Module 5 — AI Automation Workflows</a></li>
+      <li><a href="#s11">Human Hand-off Mechanism</a></li>
+      <li><a href="#s12">Lead Sources &amp; Data Ingestion</a></li>
+      <li><a href="#s13">Database Schema (Prisma)</a></li>
+      <li><a href="#s14">Analytics, Dashboards &amp; Reporting</a></li>
+      <li><a href="#s15">Security, Compliance &amp; DND (TRAI)</a></li>
+      <li><a href="#s16">Scalability &amp; Infrastructure</a></li>
+      <li><a href="#s17">Implementation Roadmap</a></li>
+      <li><a href="#s18">Team, Timeline &amp; Budget</a></li>
+      <li><a href="#s19">Deliverables &amp; Next Steps</a></li>
+      <li><a href="#s20">Risks &amp; Assumptions</a></li>
+    </ol>
+  </div>
+
+  <!-- ============ 1 ============ -->
+  <h2 class="section-title" id="s1">1. Executive Summary</h2>
+  <p class="lead">This blueprint defines a single, unified platform that combines a customer-facing <b>RO water service website</b> with an internal <b>AI-powered CRM</b>. It replaces fragmented cold-calling spreadsheets and scattered online leads with one automated pipeline: every lead — whether uploaded by the team or captured from digital marketing — is enriched, called by an AI voice agent, qualified, filtered into the correct segment, and routed to a human only when the customer asks for one or as needed.</p>
+
+  <div class="grid3">
+    <div class="stat"><b>1</b>Unified Lead Panel</div>
+    <div class="stat"><b>24×7</b>AI Telecalling</div>
+    <div class="stat"><b>100%</b>Automatic Follow-ups</div>
+  </div>
+
+  <h3>The Problem Today</h3>
+  <ul>
+    <li>Cold-calling data lives in spreadsheets; online leads live in ad dashboards — no single source of truth.</li>
+    <li>Human telecallers are expensive, inconsistent, and cannot scale past a few hundred calls a day.</li>
+    <li>Leads go cold because follow-ups are manual and forgettable.</li>
+    <li>No reliable qualification/filtering; sales agents waste time on unqualified contacts.</li>
+    <li>No visibility into which channel produces real, paying customers.</li>
+  </ul>
+
+  <h3>The Solution</h3>
+  <p>A <b>Next.js + PostgreSQL + Prisma</b> platform with a <b>Twilio + OpenAI GPT-4o Realtime</b> voice engine that autonomously dials leads, holds natural conversations, qualifies intent (new install, AMC, repair, filter/part replacement), answers FAQs, detects a request for a human, and writes every outcome back into a single CRM database.</p>
+
+  <div class="callout tip">
+    <b>Core promise:</b> The owner sees <b>every cold-call and online lead in one panel</b>, fully automated by AI, with clean segmentation and an instant human escalation path — no lead is ever lost.
+  </div>
+
+  <!-- ============ 2 ============ -->
+  <h2 class="section-title" id="s2">2. Business Objectives &amp; Success Metrics</h2>
+  <table>
+    <tr><th>Objective</th><th>How We Deliver It</th><th>KPI / Target</th></tr>
+    <tr><td>One panel for all leads</td><td>Unified CRM ingest from uploads, website, ads, WhatsApp, missed calls</td><td>100% of leads in one database</td></tr>
+    <tr><td>AI does all telecalling</td><td>Autonomous outbound voice agent with retry logic</td><td>≥ 90% of dials handled end-to-end by AI</td></tr>
+    <tr><td>Filter/qualify new clients</td><td>AI scoring + segmentation into warm/cold/not-interested</td><td>≥ 35% qualified-lead rate</td></tr>
+    <tr><td>Human hand-off on request</td><td>Live warm transfer + callback ticket</td><td>&lt; 15s hand-off latency</td></tr>
+    <tr><td>Automate the full process</td><td>Workflow engine: enrich → dial → follow-up → assign</td><td>0 manual follow-ups required</td></tr>
+    <tr><td>Scale</td><td>Concurrent AI calls + 50+ human seats</td><td>5,000+ calls/day</td></tr>
+    <tr><td>Revenue growth</td><td>Channel attribution + conversion analytics</td><td>+30% qualified pipeline in 90 days</td></tr>
+  </table>
+
+  <!-- ============ 3 ============ -->
+  <h2 class="section-title" id="s3">3. High-Level Solution Architecture</h2>
+  <div class="flow">
+    <div class="step"><span class="num">1</span><div><b>Lead Sources</b> — Team CSV upload, Website forms &amp; chatbot, AI-generated, Google/Facebook Ads, WhatsApp, missed-call, walk-in.</div></div>
+    <div class="step"><span class="num">2</span><div><b>Data Ingestion &amp; Enrichment</b> — Dedup, validation, DND scrub, geo/language tagging, intent tagging.</div></div>
+    <div class="step"><span class="num">3</span><div><b>AI Telecalling Engine</b> — Twilio Programmable Voice + OpenAI GPT-4o Realtime → natural conversation, qualification, objection handling.</div></div>
+    <div class="step"><span class="num">4</span><div><b>CRM Processing</b> — Auto scoring, segmentation, tags, call recording, transcript, sentiment.</div></div>
+    <div class="step"><span class="num">5</span><div><b>Routing</b> — Qualified → booking/AMC; "talk to human" → live warm transfer or callback ticket; not interested → nurture.</div></div>
+    <div class="step"><span class="num">6</span><div><b>Automation</b> — Follow-up cadences (SMS/WhatsApp/call), reminders, review requests, renewal notices.</div></div>
+    <div class="step"><span class="num">7</span><div><b>Analytics</b> — Funnel, agent leaderboard, channel ROI, AI vs human performance.</div></div>
+  </div>
+
+  <pre><span class="c">┌──────────────────────────── CLIENT LAYER ────────────────────────────┐
+│  Public Website (Next.js)   Customer Portal   Internal CRM (Next.js)  │
+└───────────────┬──────────────────┬───────────────────┬────────────────┘
+                │                  │                   │
+        ┌───────▼──────────────────▼───────────────────▼────────┐
+        │              Next.js App Router / API (Edge + Node)    │
+        │   REST · tRPC · WebSockets · Webhooks · Auth (RBAC)    │
+        └───────┬──────────────────┬───────────────────┬────────┘
+                │                  │                   │
+   ┌────────────▼───────┐  ┌───────▼────────┐  ┌───────▼─────────────┐
+   │  AI Voice Service  │  │  Workflow/Bus  │  │  Integrations Bus   │
+   │ Twilio + GPT-4o    │  │  BullMQ/Redis  │  │ WhatsApp·SMS·Ads    │
+   │ Realtime (WS)      │  │  Cron & Jobs   │  │ Email·Payments      │
+   └────────┬───────────┘  └───────┬────────┘  └───────┬─────────────┘
+            │                      │                   │
+        ┌───▼──────────────────────▼───────────────────▼───┐
+        │        PostgreSQL (Prisma ORM) · Object Storage    │
+        │        Recordings · Transcripts · Redis · Logs     │
+        └────────────────────────────────────────────────────┘</span></pre>
+
+  <!-- ============ 4 ============ -->
+  <h2 class="section-title" id="s4">4. Technology Stack</h2>
+  <table>
+    <tr><th>Layer</th><th>Technology</th><th>Why</th></tr>
+    <tr><td>Frontend (Website + CRM + Portal)</td><td>Next.js (App Router), React, TypeScript, Tailwind CSS, shadcn/ui</td><td>SSR/SEO for website, fast SPA-like CRM, one codebase</td></tr>
+    <tr><td>Backend / API</td><td>Next.js Route Handlers + tRPC, Node.js</td><td>Type-safe end-to-end, minimal overhead</td></tr>
+    <tr><td>Database</td><td>PostgreSQL 16 + Prisma ORM</td><td>Relational integrity for leads/calls/services</td></tr>
+    <tr><td>Cache / Queues</td><td>Redis + BullMQ</td><td>Dialer queues, retries, rate limits, real-time</td></tr>
+    <tr><td>Telephony</td><td>Twilio Programmable Voice + Media Streams</td><td>Scalable outbound/inbound + SIP trunk</td></tr>
+    <tr><td>AI Conversation</td><td>OpenAI GPT-4o Realtime API</td><td>Low-latency natural voice, barge-in, multilingual</td></tr>
+    <tr><td>Speech</td><td>OpenAI TTS/Whisper or Deepgram + ElevenLabs (Hindi/English)</td><td>Accurate STT/TTS, Indian-language support</td></tr>
+    <tr><td>Messaging</td><td>Twilio WhatsApp Business API, Twilio SMS, SendGrid</td><td>Automated follow-ups &amp; confirmations</td></tr>
+    <tr><td>Payments</td><td>Razorpay / Stripe</td><td>AMC renewals, service payments</td></tr>
+    <tr><td>Maps/Routing</td><td>Google Maps Platform</td><td>Technician scheduling &amp; service-area logic</td></tr>
+    <tr><td>Storage</td><td>S3-compatible object storage</td><td>Recordings, transcripts, documents</td></tr>
+    <tr><td>Auth</td><td>NextAuth / Auth.js (JWT + RBAC)</td><td>Roles: owner, manager, agent, technician</td></tr>
+    <tr><td>Monitoring</td><td>Sentry, Grafana + Prometheus, structured logs</td><td>Reliability &amp; call-quality tracking</td></tr>
+    <tr><td>Deployment</td><td>Docker + Vercel / AWS (ECS) or Hostinger VPS + Nginx</td><td>Flexible, cost-effective scale</td></tr>
+  </table>
+
+  <!-- ============ 5 ============ -->
+  <h2 class="section-title" id="s5">5. Module 1 — Public Website (Lead Generation)</h2>
+  <p>Marketing website optimized for SEO and conversion for an RO water provider.</p>
+  <div class="grid2">
+    <div class="card"><b>Pages</b>
+      <ul><li>Home (USPs, trust, CTA)</li><li>Services: New RO Installation, AMC, Repair, Filter/Parts, Water Testing</li><li>Products / RO Models</li><li>Pricing &amp; AMC plans</li><li>Service areas / locations</li><li>Blog &amp; water-health guides (SEO)</li><li>About, Contact, FAQs</li></ul>
+    </div>
+    <div class="card"><b>Conversion Features</b>
+      <ul><li>Multi-step "Book a Service" form</li><li>Instant quote calculator (RO type, area)</li><li>Click-to-call &amp; WhatsApp button</li><li>AI website chatbot → creates CRM lead</li><li>Missed-call auto lead capture</li><li>Landing pages per ad campaign (UTM)</li><li>Reviews &amp; testimonials, trust badges</li></ul>
+    </div>
+  </div>
+  <div class="callout"><b>SEO &amp; Speed:</b> Next.js SSR/ISR, structured data (LocalBusiness, Service), sitemap, Core Web Vitals ≥ 90, PWA-ready.</div>
+
+  <!-- ============ 6 ============ -->
+  <h2 class="section-title" id="s6">6. Module 2 — Customer Portal</h2>
+  <p>Self-service area for existing customers (login via mobile + OTP).</p>
+  <table>
+    <tr><th>Feature</th><th>Description</th></tr>
+    <tr><td>My Devices / AMC</td><td>Registered RO units, install date, AMC status &amp; expiry</td></tr>
+    <tr><td>Book / Reschedule Service</td><td>Choose date-slot, technician auto-assign by area</td></tr>
+    <tr><td>Service History</td><td>Past visits, parts replaced, invoices</td></tr>
+    <tr><td>Live Tracking</td><td>Technician ETA &amp; status</td></tr>
+    <tr><td>Payments &amp; Invoices</td><td>Online payment, download GST invoice</td></tr>
+    <tr><td>Renewals &amp; Reminders</td><td>AMC/filter renewal auto-notices</td></tr>
+    <tr><td>Support / Chat</td><td>Raise ticket, AI chatbot, callback request</td></tr>
+    <tr><td>Referral</td><td>Refer &amp; earn credits</td></tr>
+  </table>
+
+  <!-- ============ 7 ============ -->
+  <h2 class="section-title" id="s7">7. Module 3 — CRM &amp; Unified Lead Inbox</h2>
+  <p>The single control panel where <b>cold-calling and online leads</b> converge.</p>
+  <h3>Lead Inbox (Kanban + Table)</h3>
+  <ul>
+    <li>Pipeline stages: <span class="pill">New</span><span class="pill">AI Calling</span><span class="pill">Qualified</span><span class="pill">Interested</span><span class="pill d">Human Follow-up</span><span class="pill g">Converted</span><span class="pill">Nurture</span><span class="pill">Lost/DND</span></li>
+    <li>Source badges: Cold DB Upload · Website · Google Ads · Meta Ads · WhatsApp · Missed Call · Referral</li>
+    <li>Filters: source, city, language, RO type, intent, AI score, last-call outcome, assignee</li>
+    <li>Timeline per lead: calls, transcripts, notes, messages, bookings, payments</li>
+  </ul>
+  <div class="grid2">
+    <div class="card"><b>Lead 360° Profile</b>
+      <ul><li>Contact details &amp; preferred language</li><li>Multiple RO units / address</li><li>AI qualification score (0–100)</li><li>Intent: New · AMC · Repair · Parts</li><li>Best time to call, consent/DND status</li><li>Full conversation history &amp; recordings</li></ul>
+    </div>
+    <div class="card"><b>Agent Workspace</b>
+      <ul><li>Assigned leads queue &amp; daily targets</li><li>Click-to-call (browser softphone)</li><li>AI-generated call summary &amp; next action</li><li>Quick SMS/WhatsApp templates</li><li>Disposition &amp; follow-up scheduling</li><li>Booking creation inline</li></ul>
+    </div>
+  </div>
+  <div class="callout warn"><b>Roles &amp; Permissions (RBAC):</b> Owner (full), Manager (all leads + reports), Team Lead (team leads + assign), Agent (own leads), Technician (job sheet only), Accountant (billing).</div>
+
+  <!-- ============ 8 ============ -->
+  <h2 class="section-title" id="s8">8. Module 4 — AI Telecalling Engine</h2>
+  <p>Autonomous outbound + inbound voice automation built on <b>Twilio Programmable Voice</b> and the <b>OpenAI GPT-4o Realtime API</b>.</p>
+  <h3>Core Capabilities</h3>
+  <ul>
+    <li><b>Auto-dialing:</b> Preview, Progressive &amp; Predictive modes with configurable concurrency per campaign.</li>
+    <li><b>Natural conversation:</b> Realtime speech-to-speech, barge-in, natural pauses, dialect-aware.</li>
+    <li><b>Multilingual:</b> Hindi, English, Hinglish (extensible to regional languages).</li>
+    <li><b>Qualification engine:</b> Asks scripted + dynamic questions, extracts intent, budget, location, RO type, urgency.</li>
+    <li><b>Knowledge base (RAG):</b> Answers pricing, AMC terms, service areas from an updatable knowledge base.</li>
+    <li><b>Objection handling:</b> Trained responses to "not interested", "too costly", "already have RO".</li>
+    <li><b>Human detection:</b> Recognizes "talk to a person / human / agent" keywords &amp; sentiment → triggers hand-off.</li>
+    <li><b>Compliance guardrails:</b> Honest AI disclosure, DND/TRAI checks, call-recording consent.</li>
+    <li><b>Auto follow-up:</b> No-answer/busy → scheduled retries; positive → confirmation SMS/WhatsApp.</li>
+    <li><b>Post-call AI:</b> Transcription → summary → sentiment → score → next best action.</li>
+  </ul>
+
+  <h3>Engine Architecture</h3>
+  <pre><span class="c">Campaign Scheduler
+   │  (select leads, DND filter, dedupe, throttle)
+   ▼
+BullMQ Dialer Queue ──► Twilio Programmable Voice ──► PSTN Call
+   ▲                            │  bidirectional Media Stream (WebSocket)
+   │                            ▼
+   │                 GPT-4o Realtime Session
+   │                 ├─ System prompt + persona
+   │                 ├─ RAG knowledge base (pgvector)
+   │                 ├─ Tool calls: checkAvailability / bookService /
+   │                 │            createCallback / transferToHuman
+   │                 └─ Live intent + sentiment scoring
+   │                            │
+   │                            ▼
+   │            Post-call: Whisper transcript → summarizer →
+   │            CRM write-back (score, tags, disposition, recording)
+   └────────────── retry / nurture cadence ◄─────────────┘</span></pre>
+
+  <!-- ============ 9 ============ -->
+  <h2 class="section-title" id="s9">9. AI Voice Agent — Call Flow &amp; Sample Scripts</h2>
+  <div class="flow">
+    <div class="step"><span class="num">1</span><div><b>Greeting &amp; disclosure:</b> "Namaste, main [Company] se ek AI assistant hoon…"</div></div>
+    <div class="step"><span class="num">2</span><div><b>Purpose:</b> Confirm interest &amp; qualify need (new RO, service, AMC, repair).</div></div>
+    <div class="step"><span class="num">3</span><div><b>Qualify:</b> RO present? Brand age? Problem? City/area? Best time?</div></div>
+    <div class="step"><span class="num">4</span><div><b>Handle objections</b> &amp; present relevant offer / plan.</div></div>
+    <div class="step"><span class="num">5</span><div><b>Detect human request</b> → <span class="pill d">transferToHuman</span> or callback ticket.</div></div>
+    <div class="step"><span class="num">6</span><div><b>Close/next step:</b> Book service, send quote on WhatsApp, or schedule follow-up.</div></div>
+    <div class="step"><span class="num">7</span><div><b>Wrap-up:</b> Confirm details, thank, log outcome &amp; score in CRM.</div></div>
+  </div>
+
+  <h3>Sample Script — Cold Call (Hinglish)</h3>
+  <pre>AI: Namaste! Main [Company] se ek AI assistant hoon. Aapke area mein
+    RO water purifier service ke liye call kar raha hoon. 2 minute hai?
+Customer: Haan boliye.
+AI: Bahut badhiya. Kya ghar ya office mein RO purifier lagana chahte hain,
+    ya existing purifier ki servicing karani hai?
+Customer: Servicing karani hai.
+AI: Theek hai. Aapka purifier kitne saal purana hai aur last service
+    kab hui thi?
+Customer: 2 saal, 6 mahine pehle.
+AI: Samajh gaya. Filters change + general service recommend karta hoon.
+    Aap kaunse area se hain, taaki main nearest technician confirm kar saku?
+Customer: [Area]
+AI: Perfect. Main aapke liye ek service slot book kar sakta hoon.
+    Kal shaam 5 baje ka slot available hai — chalega?
+Customer: Mujhe detail chahiye, kisi insaan se baat karni hai.
+AI: Bilkul! Main abhi aapko hamare service expert se connect kar raha hoon.
+    Ek moment please… [→ live transfer]</pre>
+
+  <h3>Qualification &amp; Scoring Model</h3>
+  <table>
+    <tr><th>Signal</th><th>Weight</th><th>Source</th></tr>
+    <tr><td>Explicit intent (new/AMC/repair)</td><td>30</td><td>Conversation</td></tr>
+    <tr><td>Service area match</td><td>20</td><td>Geo / address</td></tr>
+    <tr><td>Positive sentiment / engagement</td><td>20</td><td>Realtime sentiment</td></tr>
+    <tr><td>Budget / offer acceptance</td><td>15</td><td>Conversation</td></tr>
+    <tr><td>Urgency / timeline</td><td>15</td><td>Conversation</td></tr>
+  </table>
+  <p class="small">Score ≥ 70 → Qualified (auto-book/assign). 40–69 → Warm nurture. &lt; 40 → Nurture/Lost. Any "human" request → immediate hand-off regardless of score.</p>
+
+  <!-- ============ 10 ============ -->
+  <h2 class="section-title" id="s10">10. Module 5 — AI Automation Workflows</h2>
+  <p>A visual workflow engine (trigger → condition → action) automates every step without human effort.</p>
+  <table>
+    <tr><th>Workflow</th><th>Trigger</th><th>Automated Actions</th></tr>
+    <tr><td>New Lead Nurture</td><td>Lead created (upload/web/ads)</td><td>Validate → DND scrub → dedupe → enrich → enqueue AI call</td></tr>
+    <tr><td>AI Cold Call Cadence</td><td>Enqueued lead</td><td>Call → if no answer retry 3× (spaced) → SMS/WhatsApp if still no</td></tr>
+    <tr><td>Auto-Qualification</td><td>Call ends</td><td>Transcribe → score → tag → set stage → notify assignee</td></tr>
+    <tr><td>Human Hand-off</td><td>"talk to human" / high-value</td><td>Live warm transfer; if unavailable → callback ticket + notify</td></tr>
+    <tr><td>Booking Confirmation</td><td>Service booked</td><td>WhatsApp + SMS confirmation → assign technician → calendar event</td></tr>
+    <tr><td>Post-Service Follow-up</td><td>Job completed</td><td>Feedback request → review link → upsell AMC</td></tr>
+    <tr><td>AMC / Filter Renewal</td><td>X days before expiry</td><td>Reminder call → WhatsApp → payment link → renewal</td></tr>
+    <tr><td>Re-engagement</td><td>Lost/nurture after N days</td><td>New AI call with fresh offer</td></tr>
+    <tr><td>Review &amp; Referral</td><td>Payment received / 5-star</td><td>Send review + referral link</td></tr>
+  </table>
+  <div class="callout tip"><b>AI everywhere:</b> Lead scoring, call summaries, reply suggestions, spam detection, transcript search, and predictive best-time-to-call are all AI-driven. The owner only supervises.</div>
+
+  <!-- ============ 11 ============ -->
+  <h2 class="section-title" id="s11">11. Human Hand-off Mechanism</h2>
+  <p>When a customer asks for a human (or an edge case is detected), the system escalates instantly.</p>
+  <div class="grid2">
+    <div class="card"><b>Path A — Live Warm Transfer</b>
+      <ul><li>AI detects trigger phrase / sentiment</li><li>Looks up available agent (skill + language + area)</li><li>Uses Twilio &lt;Dial&gt; to bridge the call</li><li>Passes a spoken/written context summary to agent</li><li>Target: &lt; 15s, call not dropped</li></ul>
+    </div>
+    <div class="card"><b>Path B — Callback Ticket</b>
+      <ul><li>No agent available / outside hours</li><li>AI collects preferred time &amp; reason</li><li>Creates high-priority ticket, assigns to agent</li><li>Sends confirmation SMS/WhatsApp to customer</li><li>Agent calls back within SLA</li></ul>
+    </div>
+  </div>
+  <h3>Trigger Phrases (configurable)</h3>
+  <p class="mono">"talk to human", "agent se baat", "real person", "manager", "insaan", "customer care", "kisi aadmi se", sentiment = frustrated/angry, or lead score ≥ 90.</p>
+
+  <!-- ============ 12 ============ -->
+  <h2 class="section-title" id="s12">12. Lead Sources &amp; Data Ingestion</h2>
+  <table>
+    <tr><th>Source</th><th>Method</th><th>Automation</th></tr>
+    <tr><td>Team CSV/Excel upload</td><td>Upload wizard + column mapper</td><td>Parse → dedupe → DND scrub → enqueue</td></tr>
+    <tr><td>Website forms / chatbot</td><td>Next.js API → CRM</td><td>Instant lead + AI call trigger</td></tr>
+    <tr><td>Google / Meta Ads</td><td>Webhooks + UTM capture</td><td>Tag channel → attribute ROI</td></tr>
+    <tr><td>WhatsApp enquiries</td><td>Twilio WhatsApp API</td><td>Auto-reply → create lead → AI call</td></tr>
+    <tr><td>Missed calls</td><td>Twilio missed-call webhook</td><td>Auto SMS + callback lead</td></tr>
+    <tr><td>Justdial / IndiaMART / 99acres</td><td>Lead APIs/email parser</td><td>Normalize → CRM</td></tr>
+    <tr><td>Walk-in / referral</td><td>Manual quick-add</td><td>Same pipeline</td></tr>
+  </table>
+  <div class="callout"><b>Dedup logic:</b> match on normalized phone; merge duplicates; keep source trail. <b>Validation:</b> E.164 phone format, valid Indian mobile, TLD/email checks.</div>
+
+  <!-- ============ 13 ============ -->
+  <h2 class="section-title" id="s13">13. Database Schema (Prisma — Core Models)</h2>
+  <pre>model User        { id String @id @default(cuid())  name String
+                    email String @unique  role Role  phone String?
+                    leads Lead[]  calls Call[]  createdAt DateTime @default(now()) }
+
+model Lead        { id String @id @default(cuid())
+                    name String  phone String @unique  email String?
+                    city String?  area String?  language String? @default("hi")
+                    source Source  status LeadStatus @default(NEW)
+                    intent Intent?  score Int?  dnd Boolean @default(false)
+                    consent Boolean @default(false)
+                    assignedToId String?  assignedTo User? @relation(fields:[assignedToId],references:[id])
+                    ownerId String?  activities Activity[]  calls Call[]
+                    createdAt DateTime @default(now())  updatedAt DateTime @updatedAt }
+
+model Call        { id String @id @default(cuid())  leadId String
+                    lead Lead @relation(fields:[leadId],references:[id])
+                    direction Direction  status CallStatus
+                    duration Int?  recordingUrl String?  transcript String?
+                    summary String?  sentiment String?  disposition String?
+                    aiScore Int?  handledByAi Boolean @default(true)
+                    agentId String?  agent User? @relation(fields:[agentId],references:[id])
+                    startedAt DateTime @default(now())  endedAt DateTime? }
+
+model Activity    { id String @id @default(cuid())  leadId String
+                    lead Lead @relation(fields:[leadId],references:[id])
+                    type String  note String?  meta Json?  createdAt DateTime @default(now()) }
+
+model ServiceJob  { id String @id @default(cuid())  leadId String?  customerId String?
+                    type ServiceType  status JobStatus  scheduledAt DateTime?
+                    technicianId String?  address String?  amount Decimal?
+                    invoiceUrl String?  createdAt DateTime @default(now()) }
+
+model ROKnowledge { id String @id @default(cuid())  title String
+                    content String  embedding Unsupported("vector")? }
+
+enum Role        { OWNER MANAGER TEAM_LEAD AGENT TECHNICIAN ACCOUNTANT }
+enum LeadStatus  { NEW AI_CALLING QUALIFIED INTERESTED HUMAN_FOLLOWUP CONVERTED NURTURE LOST DND }
+enum Source      { COLD_UPLOAD WEBSITE GOOGLE_ADS META_ADS WHATSAPP MISSED_CALL REFERRAL WALKIN PARTNER }
+enum Intent      { NEW_INSTALL AMC REPAIR FILTER_PARTS WATER_TEST OTHER }
+enum CallStatus  { QUEUED RINGING IN_PROGRESS COMPLETED NO_ANSWER BUSY FAILED }
+enum Direction   { OUTBOUND INBOUND }</pre>
+  <p class="small">Supporting models: <code>Campaign</code>, <code>FollowUp</code>, <code>Message</code>, <code>Payment</code>, <code>Ticket</code>, <code>AuditLog</code>, <code>WebhookEvent</code>. pgvector used for the AI knowledge base (RAG).</p>
+
+  <!-- ============ 14 ============ -->
+  <h2 class="section-title" id="s14">14. Analytics, Dashboards &amp; Reporting</h2>
+  <div class="grid2">
+    <div class="card"><b>Owner Dashboard</b>
+      <ul><li>Leads today: cold vs online</li><li>Calls made / connected / qualified</li><li>Conversion funnel &amp; revenue</li><li>AI vs human performance</li><li>Channel ROI (Ads → sales)</li></ul>
+    </div>
+    <div class="card"><b>Manager / Agent View</b>
+      <ul><li>Agent leaderboard &amp; activity</li><li>Call recordings + transcripts</li><li>Follow-up &amp; SLA compliance</li><li>Service &amp; AMC renewal tracking</li><li>Exportable reports (CSV/PDF)</li></ul>
+    </div>
+  </div>
+  <div class="kpi">
+    <div><b>Funnel:</b> Lead → Contacted → Qualified → Booked → Paid</div>
+    <div><b>AI metrics:</b> Connect rate, avg talk time, sentiment, hand-off rate</div>
+    <div><b>Attribution:</b> cost per qualified lead by source</div>
+  </div>
+
+  <!-- ============ 15 ============ -->
+  <h2 class="section-title" id="s15">15. Security, Compliance &amp; DND (TRAI)</h2>
+  <ul>
+    <li><b>TRAI/DND compliance:</b> scrub numbers against DND registry; honor consent flags; calling-hour restrictions.</li>
+    <li><b>AI disclosure:</b> agent transparently identifies as AI (configurable by region).</li>
+    <li><b>Call recording consent:</b> announcement + configurable opt-in.</li>
+    <li><b>Data protection:</b> DPDP Act (India) alignment — encryption at rest/in transit, data retention policy, PII masking.</li>
+    <li><b>Access control:</b> RBAC, 2FA for admins, audit logs of every lead/call action.</li>
+    <li><b>Secrets &amp; keys:</b> Twilio/OpenAI keys in a secrets manager; webhook signature verification.</li>
+    <li><b>Backups:</b> automated daily DB backups + point-in-time recovery.</li>
+  </ul>
+  <div class="callout warn"><b>Note:</b> Outbound calling regulations vary by region. Final calling strategy (consent, timing, disclosure) will be confirmed with legal/compliance before go-live.</div>
+
+  <!-- ============ 16 ============ -->
+  <h2 class="section-title" id="s16">16. Scalability &amp; Infrastructure (5,000+ calls/day)</h2>
+  <table>
+    <tr><th>Concern</th><th>Approach</th></tr>
+    <tr><td>Concurrent AI calls</td><td>Horizontal workers; Twilio concurrency tiers; configurable dial rate</td></tr>
+    <tr><td>Queue management</td><td>Redis + BullMQ with priorities, retry/backoff, dead-letter queue</td></tr>
+    <tr><td>Database load</td><td>Connection pooling (PgBouncer), read replicas, partitioning of call/activity tables</td></tr>
+    <tr><td>Latency</td><td>GPT-4o Realtime over WebSocket; edge routing; regional Twilio endpoints</td></tr>
+    <tr><td>50+ human seats</td><td>Softphone via Twilio Client; presence &amp; skill-based routing</td></tr>
+    <tr><td>Observability</td><td>Call-quality dashboards, error tracking, alerting</td></tr>
+  </table>
+
+  <!-- ============ 17 ============ -->
+  <h2 class="section-title" id="s17">17. Implementation Roadmap</h2>
+  <table>
+    <tr><th>Phase</th><th>Duration</th><th>Scope</th></tr>
+    <tr><td>Phase 0 — Discovery</td><td>1 week</td><td>Finalize flows, scripts, compliance, KPIs, integrations</td></tr>
+    <tr><td>Phase 1 — Foundation</td><td>2 weeks</td><td>Next.js + PostgreSQL + Prisma setup, auth, RBAC, base CRM schema</td></tr>
+    <tr><td>Phase 2 — CRM Core</td><td>3 weeks</td><td>Lead inbox, CSV upload, dedupe/DND, pipeline, timeline, agent workspace</td></tr>
+    <tr><td>Phase 3 — AI Voice Engine</td><td>4 weeks</td><td>Twilio + GPT-4o Realtime, dialer, qualification, RAG, post-call AI</td></tr>
+    <tr><td>Phase 4 — Human Hand-off &amp; Automation</td><td>3 weeks</td><td>Live transfer, callback tickets, workflow engine, follow-up cadences</td></tr>
+    <tr><td>Phase 5 — Website &amp; Portal</td><td>3 weeks</td><td>Public site, SEO, forms, chatbot, customer portal, payments</td></tr>
+    <tr><td>Phase 6 — Analytics &amp; Integrations</td><td>2 weeks</td><td>Dashboards, ad/WhatsApp integrations, reporting</td></tr>
+    <tr><td>Phase 7 — QA, Load &amp; Go-Live</td><td>2 weeks</td><td>Testing, 5k-call load test, training, deployment, hypercare</td></tr>
+  </table>
+  <p class="small"><b>Total: ~20 weeks (≈5 months)</b> for full scope. A lean MVP (CRM + AI calling + hand-off) can go live in ~8–10 weeks.</p>
+
+  <!-- ============ 18 ============ -->
+  <h2 class="section-title" id="s18">18. Team, Timeline &amp; Budget</h2>
+  <h3>Recommended Team</h3>
+  <ul>
+    <li>1 × Solution Architect / Tech Lead</li>
+    <li>2 × Full-stack Engineers (Next.js + Prisma)</li>
+    <li>1 × AI/Voice Engineer (Twilio + GPT-4o Realtime)</li>
+    <li>1 × Frontend/UI Engineer</li>
+    <li>1 × QA Engineer</li>
+    <li>1 × DevOps (part-time)</li>
+    <li>1 × BA/PM (part-time)</li>
+  </ul>
+  <div class="callout"><b>Indicative budget bands (to be refined after discovery):</b>
+    <ul>
+      <li><b>MVP</b> — CRM + AI calling + hand-off: <code>₹</code> mid-range, 8–10 weeks</li>
+      <li><b>Full platform</b> — all modules: <code>₹</code> premium, ~20 weeks</li>
+      <li><b>Monthly running</b> — Twilio, OpenAI, hosting, WhatsApp, monitoring (usage-based)</li>
+    </ul>
+    Exact figures provided in a separate commercial proposal.</div>
+
+  <!-- ============ 19 ============ -->
+  <h2 class="section-title" id="s19">19. Deliverables &amp; Next Steps</h2>
+  <h3>Deliverables</h3>
+  <ul>
+    <li>Production web app: Public website, Customer portal, Internal CRM (one codebase)</li>
+    <li>AI telecalling engine with configurable scripts &amp; knowledge base</li>
+    <li>Automation workflows &amp; human hand-off system</li>
+    <li>PostgreSQL database with full schema, migrations, seed data</li>
+    <li>Admin console, analytics dashboards, exports</li>
+    <li>API/integration layer (WhatsApp, SMS, Ads, Payments)</li>
+    <li>Documentation, deployment (Docker), training &amp; handover</li>
+  </ul>
+  <h3>Decisions Needed From You</h3>
+  <ol>
+    <li>Confirm scope: full platform vs phased MVP first.</li>
+    <li>Confirm languages (Hindi / English / regional) and call-disclosure policy.</li>
+    <li>Confirm telephony: keep/port existing number(s), new Twilio numbers, or SIP trunk.</li>
+    <li>Provide brand assets, service areas, pricing, AMC plans, and knowledge base content.</li>
+    <li>Confirm integrations: which ad platforms, WhatsApp number, payment gateway, Google Business.</li>
+    <li>Compliance: DND/consent requirements and legal review ownership.</li>
+  </ol>
+
+  <!-- ============ 20 ============ -->
+  <h2 class="section-title" id="s20">20. Risks &amp; Assumptions</h2>
+  <table>
+    <tr><th>Risk / Assumption</th><th>Mitigation</th></tr>
+    <tr><td>Telecom/DND regulations</td><td>Scrub + consent flags + legal review before go-live</td></tr>
+    <tr><td>AI misunderstanding in regional accents</td><td>Language tuning, fallback to human, continuous transcript review</td></tr>
+    <tr><td>Twilio/OpenAI usage cost at 5k calls/day</td><td>Throttling, call-duration caps, monitoring, tiered concurrency</td></tr>
+    <tr><td>Lead data quality from uploads</td><td>Validation + dedupe + DND scrub pipeline</td></tr>
+    <tr><td>Customer trust in AI</td><td>Transparent disclosure + one-tap human hand-off</td></tr>
+    <tr><td>Integration availability (Ads/WhatsApp APIs)</td><td>Adapter pattern; start with webhooks, add APIs as available</td></tr>
+  </table>
+
+  <hr>
+  <div class="footer">
+    RO Water Service Provider — Website + AI CRM Blueprint v1.0 &nbsp;·&nbsp; Prepared October 2026 &nbsp;·&nbsp; Confidential — For Client Review &nbsp;·&nbsp; <b>Status: Awaiting your instructions to proceed.</b>
+  </div>
+
+</div>
+</body>
+</html>
