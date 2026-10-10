@@ -5,7 +5,7 @@
   "description": "RO Water Service Provider - Website + AI-Powered CRM (unified cold-calling & online-lead automation)",
   "scripts": {
     "dev": "node scripts/prepare-schema.mjs && next dev",
-    "build": "node scripts/prepare-schema.mjs && prisma generate && next build",
+    "build": "node scripts/prepare-schema.mjs && prisma db push --accept-data-loss && node node_modules/tsx/dist/cli.mjs scripts/bootstrap-db.ts && prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "prepare:db": "node scripts/prepare-schema.mjs",

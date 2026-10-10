@@ -106,6 +106,11 @@ straight through and only falls back to bundled SQLite for the local case.
 
 ### Steps
 
+> **New in this build — fully automatic:** the Vercel build now runs
+> `prisma db push` (creates the tables) and seeds the database **automatically
+> when it is empty** — so a redeploy with just `DATABASE_URL` set is enough to
+> go live. No manual seeding required.
+
 1. **Create a free PostgreSQL database** — e.g. [Neon](https://neon.tech),
    [Supabase](https://supabase.com), or **Vercel Postgres**
    (Vercel → Storage → Create → Postgres). Copy the connection string.
@@ -114,31 +119,26 @@ straight through and only falls back to bundled SQLite for the local case.
 2. **Add Environment Variables** in Vercel → Project → Settings → Environment
    Variables (Production):
 
-   | Name                | Value                                            |
-   | ------------------- | ------------------------------------------------ |
-   | `DATABASE_URL`      | `postgresql://...` (your pooled connection string) |
-   | `AUTH_SECRET`       | a long random string                             |
-   | `AI_MODE`           | `mock` (no paid keys needed)                     |
-   | `SEED_SECRET`       | a secret you choose (enables one-time seeding)   |
-   | `DATABASE_PROVIDER` | (optional) `postgresql` — auto-detected on Vercel |
+   | Name            | Value                                                 |
+   | --------------- | ----------------------------------------------------- |
+   | `DATABASE_URL`  | `postgresql://...` (your pooled connection string)    |
+   | `AUTH_SECRET`   | optional — a long random string (a safe demo default exists) |
+   | `AI_MODE`       | optional — `mock` is the default (no paid keys)       |
+   | `SEED_SECRET`   | optional — only needed to manually re-seed later      |
 
-   > **Note:** The build auto-detects Vercel (`VERCEL=1`) and uses `postgresql` there. You can safely omit `DATABASE_PROVIDER`; only set it if you want to override. Locally it stays `sqlite` (zero-setup).
+   > **Note:** The build auto-detects Vercel (`VERCEL=1`) and uses `postgresql`
+   > there. Locally it stays `sqlite` (zero-setup).
 
 3. **Redeploy** (Deployments → ⋯ → Redeploy, or push a commit). The build runs
-   `prepare-schema` → `prisma generate` (postgres client) → `next build`.
+   `prepare-schema` → `prisma db push` (creates tables) → auto-seeds an empty
+   DB → `prisma generate` → `next build`.
 
-4. **Seed the database once**, by opening this URL in a browser:
-
-   ```
-   https://<your-app>.vercel.app/api/admin/seed?secret=<SEED_SECRET>
-   ```
-
-   Add `&aiCalls=12` for a faster/lighter seed. It returns
-   `{"ok":true,"seeded":{...}}`. The route is disabled (403) unless
-   `SEED_SECRET` is set, so it can never run by accident.
-
-5. **Log in** at `https://<your-app>.vercel.app/login` — e.g.
+4. **Log in** at `https://<your-app>.vercel.app/login` — e.g.
    `owner@waterpure.example` / `owner123`.
+
+> Re-seeding later: if you ever want to reset the demo data, set `SEED_SECRET`
+> and open `https://<your-app>.vercel.app/api/admin/seed?secret=<SEED_SECRET>`
+> once (or `&aiCalls=12` for a lighter seed).
 
 > Running the seed **locally against a remote Postgres** would require Prisma's
 > Postgres engine, which this machine cannot download — that's why seeding is
