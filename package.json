@@ -4,15 +4,16 @@
   "private": true,
   "description": "RO Water Service Provider - Website + AI-Powered CRM (unified cold-calling & online-lead automation)",
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
+    "dev": "node scripts/prepare-schema.mjs && next dev",
+    "build": "node scripts/prepare-schema.mjs && prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "db:push": "prisma db push",
+    "prepare:db": "node scripts/prepare-schema.mjs",
+    "db:push": "node scripts/prepare-schema.mjs && prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "db:reset": "prisma db push --force-reset && tsx prisma/seed.ts",
-    "setup": "prisma generate && prisma db push && tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "db:reset": "node scripts/prepare-schema.mjs && prisma db push --force-reset && tsx prisma/seed.ts",
+    "setup": "node scripts/prepare-schema.mjs && prisma generate && prisma db push && tsx prisma/seed.ts",
+    "postinstall": "node scripts/prepare-schema.mjs && prisma generate"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

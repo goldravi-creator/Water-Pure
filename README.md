@@ -87,23 +87,61 @@ WhatsApp/SMS summary. Humans take over exactly where nuance is needed.
 
 ---
 
-## Switch to PostgreSQL (production)
+## Deploy to Vercel (PostgreSQL)
 
-`prisma/schema.prisma` uses only portable scalar types (enums are app-layer
-Strings), so moving to Postgres is a two-line change:
+**Why:** Vercel is serverless — it has no persistent disk, so SQLite cannot run
+there (every DB call fails with *"the URL must start with the protocol `file:`"*).
+Production must use PostgreSQL.
 
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
+The project is **provider-switchable** so local dev stays zero-setup SQLite
+while Vercel uses PostgreSQL, with no code edits:
 
-```env
-DATABASE_URL="postgresql://user:pass@host:5432/ro_crm?schema=public"
-```
+- **Local:** `DATABASE_PROVIDER` is unset → `scripts/prepare-schema.mjs` sets the
+  schema provider to `sqlite`.
+- **Vercel:** set `DATABASE_PROVIDER=postgresql` → the prebuild flips the schema
+  to `postgresql` before `prisma generate` / `next build`.
 
-then re-run setup. The same schema + seed work unchanged.
+`src/lib/db.ts` is also provider-aware: it passes real `postgres://` URLs
+straight through and only falls back to bundled SQLite for the local case.
+
+### Steps
+
+1. **Create a free PostgreSQL database** — e.g. [Neon](https://neon.tech),
+   [Supabase](https://supabase.com), or **Vercel Postgres**
+   (Vercel → Storage → Create → Postgres). Copy the connection string.
+   For serverless, prefer the **pooled** connection string.
+
+2. **Add Environment Variables** in Vercel → Project → Settings → Environment
+   Variables (Production):
+
+   | Name                | Value                                            |
+   | ------------------- | ------------------------------------------------ |
+   | `DATABASE_URL`      | `postgresql://...` (your pooled connection string) |
+   | `DATABASE_PROVIDER` | `postgresql`                                     |
+   | `AUTH_SECRET`       | a long random string                             |
+   | `AI_MODE`           | `mock` (no paid keys needed)                     |
+   | `SEED_SECRET`       | a secret you choose (enables one-time seeding)   |
+
+3. **Redeploy** (Deployments → ⋯ → Redeploy, or push a commit). The build runs
+   `prepare-schema` → `prisma generate` (postgres client) → `next build`.
+
+4. **Seed the database once**, by opening this URL in a browser:
+
+   ```
+   https://<your-app>.vercel.app/api/admin/seed?secret=<SEED_SECRET>
+   ```
+
+   Add `&aiCalls=12` for a faster/lighter seed. It returns
+   `{"ok":true,"seeded":{...}}`. The route is disabled (403) unless
+   `SEED_SECRET` is set, so it can never run by accident.
+
+5. **Log in** at `https://<your-app>.vercel.app/login` — e.g.
+   `owner@waterpure.example` / `owner123`.
+
+> Running the seed **locally against a remote Postgres** would require Prisma's
+> Postgres engine, which this machine cannot download — that's why seeding is
+> done remotely via the protected route above (or from any machine with a normal
+> network via `DATABASE_PROVIDER=postgresql DATABASE_URL=... npm run db:push && npm run db:seed`).
 
 ---
 
